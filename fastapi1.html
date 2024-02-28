@@ -1,0 +1,63 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>아이리스 종 예측</title>
+</head>
+<body>
+
+<h1>아이리스 종 예측</h1>
+
+<form id="irisForm">
+    Sepal Length: <input type="text" id="sepal_length" name="sepal_length"><br>
+    Sepal Width: <input type="text" id="sepal_width" name="sepal_width"><br>
+    Petal Length: <input type="text" id="petal_length" name="petal_length"><br>
+    Petal Width: <input type="text" id="petal_width" name="petal_width"><br>
+    <input type="submit" value="예측">
+</form>
+
+<div id="predictionResult"></div>
+
+<script>
+// Form을 선택합니다.
+const form = document.getElementById('irisForm');
+// 결과를 표시할 엘리먼트를 선택합니다.
+const resultElement = document.getElementById('predictionResult');
+
+form.addEventListener('submit', function (event) {
+    // 폼의 기본 제출 동작을 방지합니다.
+    event.preventDefault();
+
+    // 사용자 입력 값을 가져와서 JSON 형태로 변환합니다.
+    const formData = {
+        sepal_length: document.getElementById('sepal_length').value,
+        sepal_width: document.getElementById('sepal_width').value,
+        petal_length: document.getElementById('petal_length').value,
+        petal_width: document.getElementById('petal_width').value
+    };
+
+    // fetch API를 사용하여 데이터를 서버로 전송하고 결과를 받습니다.
+    fetch('http://localhost:8000/predict', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function(data) {
+        // 서버로부터 받은 예측 결과를 화면에 표시합니다.
+        resultElement.innerText = data.message;
+    })
+    .catch(function(error) {
+        console.error('Error:', error);
+    });
+});
+</script>
+
+</body>
+</html>
+``
